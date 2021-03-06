@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽奖大转盘</title>
+    <style>
+        .content {
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .point {
+            position: absolute;
+            top: 82px;
+            left: 95px;
+            width: 110px;
+            height: 125px;
+        }
+
+        .prizeAlert {
+            display: none;
+            position: absolute;
+            top: 100px;
+            left: 80px;
+            width: 100px;
+            height: 60px;
+            padding: 10px 20px;
+            font-size: 12px;
+            text-align: center;
+            border: solid 1px green;
+            border-radius: 5px;
+            z-index: 999;
+            background-color: snow;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <canvas id="canvas" width="300px" height="300px"></canvas>
+        <img src="./img/wheel-pointer.png" alt="" class="point">
+        <div class="prizeAlert">
+            <p class="message"></p>
+            <button class="confirmBtn">确定</button>
+        </div>
+    </div>
+
+
+
+</body>
+<script type="text/javascript" src="./js/canvas.js"></script>
+<script type="text/javascript" src='./js/rotate.js'></script>
+<script>
+    /*大转盘相关配置*/
+
+    window.onload = function () {
+        var canvas = document.getElementById('canvas');
+        var wheel = queryWheelInfo();
+        console.log(wheel)
+        //绘制大转盘
+        drawlWheel(wheel, canvas);
+
+        wheel.result = getWheelResult()
+
+        var point = document.querySelector('.point')
+        var canvas_rotate = document.querySelector('#canvas')
+        var prizeAlert = document.querySelector('.prizeAlert')
+        var confirmBtn = document.querySelector('.confirmBtn')
+
+        var angle = 360 - (wheel.result / wheel.prize.length) * 360
+
+        console.log("中奖要旋转的角度angle=" + angle)
+        point.addEventListener('click', function () {
+
+            var prizeMessage = '恭喜您获得' + wheel.prize[wheel.result].text + '!'
+            wheelRotate(angle, prizeMessage, showPrize)
+
+        })
+
+        confirmBtn.addEventListener('click', function () {
+            prizeAlert.style.display = 'none'
+        })
+
+        function showPrize(message) {
+
+            var prizeAlert = document.querySelector('.prizeAlert')
+            prizeAlert.children[0].innerText = message
+            prizeAlert.style.display = 'block';
+
+        }
+    }
+</script>
+
+</html>
